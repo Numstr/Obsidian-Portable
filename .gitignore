@@ -1,0 +1,15 @@
+# Blacklist files/folders in same directory as the .gitignore file
+/*
+
+# Whitelist
+!App/
+App/*
+!App/AppInfo/
+!App/Utils/
+!.github/
+!.editorconfig
+!.gitignore
+!README.md
+!ObsidianPortable.exe
+!ObsidianPortable.ini
+!Updater.bat

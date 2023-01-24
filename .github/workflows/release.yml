@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+        type: "zip"
+        filename: "ObsidianPortable.zip"
+        exclusions: "*.git* .editorconfig* README.md"
+
+    - name: Upload Release
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: "latest"
+        prerelease: false
+        title: "ObsidianPortable"
+        files: "ObsidianPortable.zip"
+
+    - name: Clean Workflow
+      uses: dmvict/clean-workflow-runs@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        save_period: 0
+        save_min_runs_number: 0
