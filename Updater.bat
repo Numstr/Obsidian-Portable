@@ -1,9 +1,9 @@
 @echo off
-SetLocal EnableExtensions EnableDelayedExpansion
 
 cd /d %~dp0
 
 set HERE=%~dp0
+set HERE_DS=%HERE:\=\\%
 
 set BUSYBOX="%HERE%App\Utils\busybox.exe"
 set CURL="%HERE%App\Utils\curl.exe"
@@ -11,7 +11,7 @@ set SZIP="%HERE%App\Utils\7za.exe"
 
 :::::: NETWORK CHECK
 
-%CURL% -is www.google.com | %BUSYBOX% grep -q "200 OK"
+%CURL% -I -s www.google.com | %BUSYBOX% grep -q "200 OK"
 
 if "%ERRORLEVEL%" == "1" (
   echo Check Your Network Connection
@@ -36,21 +36,35 @@ if "%PROCESSOR_ARCHITECTURE%" == "x86" (
 
 :::::: VERSION CHECK
 
-set LATEST="https://github.com/obsidianmd/obsidian-releases/releases/latest"
+wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %BUSYBOX% tail -n2 | %BUSYBOX% cut -c 1-6 > current.txt
 
-%CURL% -s -k -I %LATEST% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > version.txt
+for /f %%V in ('more current.txt') do (set CURRENT=%%V)
+echo Current: %CURRENT%
 
-for /f %%V in ('more version.txt') do (set VERSION=%%V)
-echo Latest: %VERSION%
+set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
-if exist "version.txt" del "version.txt" > NUL
+%CURL% -I -k -s %LATEST_URL% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > latest.txt
+
+for /f %%V in ('more latest.txt') do (set LATEST=%%V)
+echo Latest: %LATEST%
+
+if exist "current.txt" del "current.txt" > NUL
+if exist "latest.txt" del "latest.txt" > NUL
+
+if "%CURRENT%" == "%LATEST%" (
+  echo You Have The Latest Version
+  pause
+  exit
+) else goto CONTINUE
 
 ::::::::::::::::::::
+
+:CONTINUE
 
 :::::: RUNNING PROCESS CHECK
 
 for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsidian.exe (
-  echo Close Session To Update
+  echo Close Obsidian To Update
   pause
   exit
 )
@@ -62,9 +76,9 @@ for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsi
 if exist "TMP" rmdir "TMP" /s /q
 mkdir "TMP"
 
-set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%VERSION%/Obsidian.%VERSION%%ARCH%.exe"
+set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian.%LATEST%%ARCH%.exe"
 
-%CURL% -# -k -L %OBSIDIAN% -o TMP\Obsidian.%VERSION%%ARCH%.exe
+%CURL% -k -L -# %OBSIDIAN% -o TMP\Obsidian.%LATEST%%ARCH%.exe
 
 ::::::::::::::::::::
 
@@ -72,7 +86,7 @@ set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/
 
 if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
-%SZIP% x -aoa TMP\Obsidian.%VERSION%%ARCH%.exe -o"App\Obsidian" > NUL
+%SZIP% x -aoa TMP\Obsidian.%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
 
 ::::::::::::::::::::
 
