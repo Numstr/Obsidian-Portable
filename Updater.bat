@@ -78,7 +78,7 @@ mkdir "TMP"
 
 set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian.%LATEST%%ARCH%.exe"
 
-%CURL% -k -L -# %OBSIDIAN% -o TMP\Obsidian.%LATEST%%ARCH%.exe
+%CURL% -k -L %OBSIDIAN% -o TMP\Obsidian.%LATEST%%ARCH%.exe
 
 ::::::::::::::::::::
 
