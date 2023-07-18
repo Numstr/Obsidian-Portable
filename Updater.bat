@@ -100,7 +100,8 @@ rmdir "TMP" /s /q
 
 :::::: APP INFO
 
-%BUSYBOX% sed -i "/Version/d" %HERE%App\AppInfo\AppInfo.ini
+%BUSYBOX% sed -i "/Version/d" "%HERE%App\AppInfo\AppInfo.ini"
+echo. >> "App\AppInfo\AppInfo.ini"
 echo [Version] >> "App\AppInfo\AppInfo.ini"
 echo DisplayVersion=%LATEST% >> "App\AppInfo\AppInfo.ini"
 
