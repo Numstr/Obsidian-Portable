@@ -88,9 +88,15 @@ if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
 %SZIP% x -aoa TMP\Obsidian.%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
 
+rmdir "TMP" /s /q
+
 ::::::::::::::::::::
 
-rmdir "TMP" /s /q
+%BUSYBOX% sed -i "/Version/d" %HERE%App\AppInfo\AppInfo.ini
+echo [Version] >> "App\AppInfo\AppInfo.ini"
+echo DisplayVersion=%LATEST% >> "App\AppInfo\AppInfo.ini"
+
+::::::::::::::::::::
 
 echo Done
 
