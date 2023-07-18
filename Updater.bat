@@ -11,7 +11,7 @@ set SZIP="%HERE%App\Utils\7za.exe"
 
 :::::: NETWORK CHECK
 
-%CURL% -I -s www.google.com | %BUSYBOX% grep -q "200 OK"
+%CURL% -I -s www.google.com | %BUSYBOX% grep -q "403"
 
 if "%ERRORLEVEL%" == "1" (
   echo Check Your Network Connection
