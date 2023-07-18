@@ -36,10 +36,14 @@ if "%PROCESSOR_ARCHITECTURE%" == "x86" (
 
 :::::: VERSION CHECK
 
+if not exist wmic goto LATEST
+
 wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %BUSYBOX% tail -n2 | %BUSYBOX% cut -c 1-6 > current.txt
 
 for /f %%V in ('more current.txt') do (set CURRENT=%%V)
 echo Current: %CURRENT%
+
+:LATEST
 
 set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
@@ -55,13 +59,15 @@ if "%CURRENT%" == "%LATEST%" (
   echo You Have The Latest Version
   pause
   exit
-) else goto CONTINUE
+) else goto PROCESS
 
 ::::::::::::::::::::
 
-:CONTINUE
+:PROCESS
 
 :::::: RUNNING PROCESS CHECK
+
+if not exist tasklist goto GET
 
 for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsidian.exe (
   echo Close Obsidian To Update
@@ -70,6 +76,8 @@ for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsi
 )
 
 ::::::::::::::::::::
+
+:GET
 
 :::::: GET LATEST VERSION
 
@@ -90,7 +98,7 @@ if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
 rmdir "TMP" /s /q
 
-::::::::::::::::::::
+:::::: APP INFO
 
 %BUSYBOX% sed -i "/Version/d" %HERE%App\AppInfo\AppInfo.ini
 echo [Version] >> "App\AppInfo\AppInfo.ini"
