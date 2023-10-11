@@ -50,6 +50,7 @@ set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
 for /f %%V in ('more latest.txt') do (set LATEST=%%V)
 echo Latest: %LATEST%
+echo:
 
 if exist "current.txt" del "current.txt" > NUL
 if exist "latest.txt" del "latest.txt" > NUL
@@ -85,15 +86,18 @@ mkdir "TMP"
 
 set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian.%LATEST%%ARCH%.exe"
 
-%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian.%LATEST%%ARCH%.exe
+%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian_%LATEST%%ARCH%.exe
 
 ::::::::::::::::::::
 
 :::::: UNPACKING
 
+echo:
+echo Unpacking
+
 if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
-%SZIP% x -aoa TMP\Obsidian.%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
+%SZIP% x -aoa TMP\Obsidian_%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
 
 rmdir "TMP" /s /q
 
@@ -106,6 +110,7 @@ echo DisplayVersion=%LATEST% >> "App\AppInfo\AppInfo.ini"
 
 ::::::::::::::::::::
 
+echo:
 echo Done
 
 pause
