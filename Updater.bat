@@ -37,7 +37,10 @@ if "%PROCESSOR_ARCHITECTURE%" == "x86" (
 
 if not exist "%WINDIR%\system32\wbem\wmic.exe" goto LATEST
 
-wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %BUSYBOX% tail -n2 | %BUSYBOX% cut -c 1-6 > current.txt
+wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %BUSYBOX% tail -n2 ^
+ | %BUSYBOX% rev ^
+ | %BUSYBOX% cut -c 6- ^
+ | %BUSYBOX% rev > current.txt
 
 for /f %%V in ('more current.txt') do (set CURRENT=%%V)
 echo Current: %CURRENT%
