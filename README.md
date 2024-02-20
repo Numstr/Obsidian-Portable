@@ -15,3 +15,11 @@ the application from a CD or if you work on a computer that may have spyware or
 viruses and you'd like to keep your device set to read-only. As a consequence
 of this technique, any changes you make during the Live mode session aren't
 saved back to your device.
+
+## Multiple Instance
+
+To run multiple instance of obsidian, make a new application folder and rename it. This will allow you to open the same / different vault.
+```
+ObsidianPortable
+ObsidianPortableClone
+```
