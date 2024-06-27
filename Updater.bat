@@ -87,9 +87,9 @@ for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsi
 if exist "TMP" rmdir "TMP" /s /q
 mkdir "TMP"
 
-set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian.%LATEST%%ARCH%.exe"
+set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
 
-%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian_%LATEST%%ARCH%.exe
+%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian-%LATEST%%ARCH%.exe
 
 ::::::::::::::::::::
 
@@ -100,7 +100,7 @@ echo Unpacking
 
 if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
-%SZIP% x -aoa TMP\Obsidian_%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
+%SZIP% x -aoa TMP\Obsidian-%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
 
 rmdir "TMP" /s /q
 
