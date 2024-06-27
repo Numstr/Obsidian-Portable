@@ -23,13 +23,18 @@ if "%ERRORLEVEL%" == "1" (
 :::::: ARCH
 
 if "%PROCESSOR_ARCHITECTURE%" == "x86" (
-  set ARCH=-32
+  set ARCH=6.7z
 ) else if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
-  set ARCH=
+  set ARCH=4.7z
 ) else exit
 
-:: set ARCH=-32
-:: set ARCH=
+:: set ARCH=6.7z
+:: set ARCH=4.7z
+:: set ARCH=2.7z
+
+:: 6.7z x32
+:: 4.7z x64
+:: 2.7z arm64
 
 ::::::::::::::::::::
 
@@ -89,7 +94,7 @@ mkdir "TMP"
 
 set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
 
-%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian-%LATEST%%ARCH%.exe
+%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian-%LATEST%.exe
 
 ::::::::::::::::::::
 
@@ -100,7 +105,8 @@ echo Unpacking
 
 if exist "App\Obsidian" rmdir "App\Obsidian" /s /q
 
-%SZIP% x -aoa TMP\Obsidian-%LATEST%%ARCH%.exe -o"App\Obsidian" > NUL
+%SZIP% x -t# -aoa TMP\Obsidian-%LATEST%.exe -o"TMP" %ARCH% > NUL
+%SZIP% x -aoa TMP\%ARCH% -o"App\Obsidian" > NUL
 
 rmdir "TMP" /s /q
 
