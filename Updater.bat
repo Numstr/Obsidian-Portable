@@ -5,8 +5,17 @@ cd /d %~dp0
 set HERE=%~dp0
 set HERE_DS=%HERE:\=\\%
 
+set CURL=curl
 set BUSYBOX="%HERE%App\Utils\busybox.exe"
 set SZIP="%HERE%App\Utils\7za.exe"
+
+:::::: PROXY
+
+set PROXY=false
+set HTTP-PROXY=http://127.0.0.1:3128
+set HTTPS-PROXY=https://127.0.0.1:3128
+
+::::::::::::::::::::
 
 :::::: NETWORK CHECK
 
@@ -94,7 +103,9 @@ mkdir "TMP"
 
 set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
 
-%BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian-%LATEST%.exe
+if %PROXY% equ false %BUSYBOX% wget %OBSIDIAN% -O TMP\Obsidian-%LATEST%.exe
+
+if %PROXY% equ true %CURL% -k -L -x %HTTP-PROXY% %OBSIDIAN% -o TMP\Obsidian.%LATEST%%ARCH%.exe
 
 ::::::::::::::::::::
 
