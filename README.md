@@ -23,3 +23,9 @@ To run multiple instance of obsidian, make a new application folder and rename i
 ObsidianPortable
 ObsidianPortableClone
 ```
+
+## Updater.bat
+### Proxy
+- `PROXY` enable proxy `true / false`
+- `HTTP-PROXY` set http proxy address:port. `http://127.0.0.1:3128`
+- `HTTPS-PROXY` set https proxy address:port. `https://127.0.0.1:3128`
