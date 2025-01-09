@@ -26,6 +26,6 @@ ObsidianPortableClone
 
 ## Updater.bat
 ### Proxy
-- `PROXY` enable proxy `true / false`
-- `HTTP-PROXY` set http proxy address:port. `http://127.0.0.1:3128`
-- `HTTPS-PROXY` set https proxy address:port. `https://127.0.0.1:3128`
+- `USE_PROXY` set proxy usage `true` `false`
+- `PROXY_TYPE` set proxy type `http` `https` `socks4` `socks5`
+- `PROXY_ADDRESS` set proxy address:port `https://127.0.0.1:3128`
