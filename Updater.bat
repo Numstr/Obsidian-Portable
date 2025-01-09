@@ -1,5 +1,7 @@
 @echo off
 
+setlocal enabledelayedexpansion
+
 cd /d %~dp0
 
 set HERE=%~dp0
@@ -9,9 +11,23 @@ set BUSYBOX="%HERE%App\Utils\busybox.exe"
 set CURL="%HERE%App\Utils\curl.exe"
 set SZIP="%HERE%App\Utils\7za.exe"
 
+:::::: PROXY
+
+set USE_PROXY=false
+set PROXY_TYPE=http
+set PROXY_ADDRESS=127.0.0.1:3128
+
+
+if %USE_PROXY% == true (
+  set PROXY_URL=%PROXY_TYPE%://%PROXY_ADDRESS%
+  set CURL_PROXY=--proxy !%PROXY_URL!
+)
+
+::::::::::::::::::::
+
 :::::: NETWORK CHECK
 
-%CURL% -I -s https://www.w3.org | %BUSYBOX% grep -q "HTTP"
+%CURL% -I -s %CURL_PROXY% https://www.w3.org | %BUSYBOX% grep -q "HTTP"
 
 if "%ERRORLEVEL%" == "1" (
   echo Check Your Network Connection
@@ -55,7 +71,7 @@ echo Current: %CURRENT%
 
 set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
-%CURL% -I -s %LATEST_URL% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > latest.txt
+%CURL% -I -s %CURL_PROXY% %LATEST_URL% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > latest.txt
 
 for /f %%V in ('more latest.txt') do (set LATEST=%%V)
 echo Latest: %LATEST%
@@ -95,7 +111,7 @@ mkdir "TMP"
 
 set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
 
-%CURL% -L %OBSIDIAN% -o TMP\Obsidian-%LATEST%.exe
+%CURL% -L %CURL_PROXY% %OBSIDIAN% -o TMP\Obsidian-%LATEST%.exe
 
 ::::::::::::::::::::
 
