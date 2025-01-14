@@ -28,4 +28,4 @@ ObsidianPortableClone
 ### Proxy
 - `USE_PROXY` set proxy usage `true` `false`
 - `PROXY_TYPE` set proxy type `http` `https` `socks4` `socks5`
-- `PROXY_ADDRESS` set proxy address:port `https://127.0.0.1:3128`
+- `PROXY_ADDRESS` set proxy address:port `127.0.0.1:3128`
