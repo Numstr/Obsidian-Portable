@@ -64,7 +64,7 @@ wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %B
  | %BUSYBOX% cut -c 6- ^
  | %BUSYBOX% rev > current.txt
 
-for /f %%V in ('more current.txt') do (set CURRENT=%%V)
+for /f %%V in ('type current.txt') do (set CURRENT=%%V)
 echo Current: %CURRENT%
 
 :LATEST
@@ -73,7 +73,7 @@ set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
 %CURL% -I -s %CURL_PROXY% %LATEST_URL% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > latest.txt
 
-for /f %%V in ('more latest.txt') do (set LATEST=%%V)
+for /f %%V in ('type latest.txt') do (set LATEST=%%V)
 echo Latest: %LATEST%
 echo:
 
