@@ -8,7 +8,7 @@ set HERE=%~dp0
 set HERE_DS=%HERE:\=\\%
 
 set BUSYBOX="%HERE%App\Utils\busybox.exe"
-set CURL="%HERE%App\Utils\curl.exe"
+set CURL=%HERE%App\Utils\curl.exe
 set SZIP="%HERE%App\Utils\7za.exe"
 
 :::::: PROXY
@@ -59,26 +59,24 @@ if "%PROCESSOR_ARCHITECTURE%" == "x86" (
 
 if not exist "%WINDIR%\system32\wbem\wmic.exe" goto LATEST
 
-wmic datafile where name='%HERE_DS%App\\Obsidian\\Obsidian.exe' get version | %BUSYBOX% tail -n2 ^
- | %BUSYBOX% rev ^
- | %BUSYBOX% cut -c 6- ^
- | %BUSYBOX% rev > current.txt
-
-for /f %%V in ('more current.txt') do (set CURRENT=%%V)
+for /f %%V in ('wmic datafile where "name='%HERE_DS%App\\Obsidian\\Obsidian.exe'" get version
+  ^| %BUSYBOX% tail -n2
+  ^| %BUSYBOX% rev
+  ^| %BUSYBOX% cut -c 6-
+  ^| %BUSYBOX% rev') ^
+do (set CURRENT=%%V)
 echo Current: %CURRENT%
 
 :LATEST
 
 set LATEST_URL="https://github.com/obsidianmd/obsidian-releases/releases/latest"
 
-%CURL% -I -s %CURL_PROXY% %LATEST_URL% | %BUSYBOX% grep -o tag/v[0-9.]\+[0-9] | %BUSYBOX% cut -d "v" -f2 > latest.txt
-
-for /f %%V in ('more latest.txt') do (set LATEST=%%V)
+for /f %%V in ('%CURL% -I -s %CURL_PROXY% %LATEST_URL%
+  ^| %BUSYBOX% grep -o tag/v[0-9.]\+[0-9]
+  ^| %BUSYBOX% cut -d "v" -f2') ^
+do (set LATEST=%%V)
 echo Latest: %LATEST%
 echo:
-
-if exist "current.txt" del "current.txt" > NUL
-if exist "latest.txt" del "latest.txt" > NUL
 
 if "%CURRENT%" == "%LATEST%" (
   echo You Have The Latest Version
