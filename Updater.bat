@@ -27,7 +27,7 @@ if %USE_PROXY% == true (
 
 :::::: NETWORK CHECK
 
-%CURL% -I -s %CURL_PROXY% https://www.google.com | %BUSYBOX% grep -q "HTTP"
+%CURL% -I -s %CURL_PROXY% https://cern.ch | %BUSYBOX% grep -q "HTTP"
 
 if "%ERRORLEVEL%" == "1" (
   echo Check Your Network Connection
