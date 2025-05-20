@@ -128,7 +128,11 @@ rmdir "TMP" /s /q
 :::::: APP INFO
 
 %BUSYBOX% sed -i "/Version/d" "%HERE%App\AppInfo\AppInfo.ini"
-(echo;& echo [Version]& echo DisplayVersion=%LATEST%) >> "App\AppInfo\AppInfo.ini"
+for /f %%N in ('%BUSYBOX% tail -c 1 %HERE%App\AppInfo\AppInfo.ini') do (set LINE=%%N)
+if "%LINE%" == "n" (
+  (echo;& echo;) >> "App\AppInfo\AppInfo.ini"
+)
+(echo [Version]& echo DisplayVersion=%LATEST%) >> "App\AppInfo\AppInfo.ini"
 
 ::::::::::::::::::::
 
