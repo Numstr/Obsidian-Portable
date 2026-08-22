@@ -115,10 +115,25 @@ for /f %%P in ('tasklist /NH /FI "IMAGENAME eq Obsidian.exe"') do if %%P == Obsi
 
 :::::: GET LATEST VERSION
 
+set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
+
+::%CURL% -I -s %CURL_PROXY% %OBSIDIAN% -o NUL -w "%{http_code}"
+
+::%CURL% -I -s %CURL_PROXY% %OBSIDIAN% | %BUSYBOX% grep -o "404"
+
+:TEST
+
+for /f %%E in ('%CURL% -I -s %CURL_PROXY% %OBSIDIAN% -o NUL -w %%{http_code}') do if %%E == 404 (
+  echo Version For Windows Not Found.
+  set /p "V=Enter The Version Number To Download: "
+  if not defined v exit
+  set LATEST=!id!
+  set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v!V!/Obsidian-!V!.exe"
+  goto TEST
+)
+
 if exist "TMP" rmdir "TMP" /s /q
 mkdir "TMP"
-
-set OBSIDIAN="https://github.com/obsidianmd/obsidian-releases/releases/download/v%LATEST%/Obsidian-%LATEST%.exe"
 
 %CURL% -L %CURL_PROXY% %OBSIDIAN% -o TMP\Obsidian-%LATEST%.exe
 
